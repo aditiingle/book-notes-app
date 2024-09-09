@@ -1,0 +1,53 @@
+<%- include('partials/header', { title: 'Books List', headerTitle: 'Books List' }) %>
+
+<form action="/add" method="post">
+    <fieldset>
+        <legend>Add New Book</legend>
+        
+        <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input type="text" id="title" name="title" class="form-control" placeholder="Title" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="author" class="form-label">Author</label>
+            <input type="text" id="author" name="author" class="form-control" placeholder="Author" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="rating" class="form-label">Rating</label>
+            <input type="number" id="rating" name="rating" class="form-control" min="1" max="5" placeholder="Rating" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="recency" class="form-label">Date Read</label>
+            <input type="date" id="recency" name="recency" class="form-control" placeholder="Date Read" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="notes" class="form-label">Notes</label>
+            <textarea id="notes" name="notes" class="form-control" rows="3" placeholder="Additional notes"></textarea>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Add Book</button>
+    </fieldset>
+</form>
+
+<h2>Books List</h2>
+<ul style="list-style-type: none;">
+    <% booksList.forEach(book => { %>
+        <li>
+            <strong><%= book.title %></strong> by <%= book.author %>
+            - Rating: <%= book.rating %>
+            - Read on: <%= book.recency ? new Date(book.recency).toLocaleDateString() : 'No date available' %>
+            <p><strong>Notes:</strong> <%= book.notes || 'No notes available' %></p>
+            <a href="/edit/<%= book.id %>">Edit</a>
+            <form action="/delete" method="post" style="display:inline;">
+                <input type="hidden" name="deleteBookId" value="<%= book.id %>">
+                <button type="submit" class="btn btn">Delete</button>
+            </form>
+        </li>
+    <% }) %>
+</ul>
+
+<%- include('partials/footer') %>

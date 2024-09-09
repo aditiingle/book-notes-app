@@ -1,5 +1,5 @@
 // Importing modules 
-import express from "express"; //express framework for building web server
+import express from "express"; // express framework for building web server
 import bodyParser from "body-parser"; // middleware for parsing request bodies
 import pg from "pg"; // PostgreSQL client for interacting with the database
 import axios from "axios"; // Axios for making HTTP requests (for external APIs)
@@ -11,12 +11,11 @@ dotenv.config();
 const app = express();
 const port = 3000;
 
-
 // Set up the PostgreSQL database connection
 const db = new pg.Client({
     user: "postgres",
     host: "localhost",
-    database: "booklist",
+    database: "book_list",
     password: process.env.DB_PASSWORD,
     port: 5432,
 });
@@ -31,13 +30,13 @@ app.set("view engine", "ejs"); // Set EJS as templating engine
 
 let books = [];
 
-// Route to display the list of books (READ funtionality)
+// Route to display the list of books (READ functionality)
 app.get("/", async (req, res) => {
     try {
         const result = await db.query("SELECT * FROM books ORDER BY id ASC"); // Query database for all the books and order them by ID
         books = result.rows; // Store the result in the books array
   
-        res.render("index.ejs", { // Render the index.js template with the list of books
+        res.render("index.ejs", { // Render the index.ejs template with the list of books
             listTitle: "Books Collection", // The title of the book list
             booksList: books, // Pass the books data to the template
         }); 
@@ -46,31 +45,55 @@ app.get("/", async (req, res) => {
     }
 });
 
-// Route to add a new book (CREATE functionality)
-app.post("/add", async (req, res) => { //
-    const { title, author, rating, recency } = req.body; // Extract data from the form submission
+// Route to display the edit form for a specific book (READ functionality)
+app.get("/edit/:id", async (req, res) => {
+    const id = req.params.id; // Get the book ID from the URL parameters
     try {
-        await db.query(
-            "INSERT INTO books (title, author, rating, recency) VALUES ($1, $2, $3, $4)", // Insert the new book into the database
-            [title, author, rating, recency]
-        );
-        res.redirect("/"); // Redirect to the home page
+        const result = await db.query("SELECT * FROM books WHERE id = $1", [id]); // Fetch the book details from the database
+        const book = result.rows[0]; // Get the book details from the query result
+
+        if (book) {
+            res.render("edit_book.ejs", { // Render the edit form template
+                book: book // Pass the book details to the template
+            });
+        } else {
+            res.status(404).send("Book not found"); // Handle the case where the book is not found
+        }
     } catch (err) {
-        console.log(err);
+        console.log(err); // Log any errors
+        res.status(500).send("Server error"); // Send a server error response in case of failure
     }
 });
 
-// Route to update a book's details (UPDATE functionality)
-app.post("/edit", async (req, res) => {
-    const { id, title, author, rating, recency } = req.body;
+// Route to add a new book (CREATE functionality)
+app.post("/add", async (req, res) => {
+    const { title, author, rating, recency, notes } = req.body; // Extract data from form submission
     try {
         await db.query(
-            "UPDATE books SET title = $1, author = $2, rating = $3, recency = $4 WHERE id = $5", // Update the book in the database
-            [title, author, rating, recency, id]
+            "INSERT INTO books (title, author, rating, recency, notes) VALUES ($1, $2, $3, $4, $5)", // Ensure notes are included in the query
+            [title, author, rating, recency || null, notes || null] // Include notes in the parameters
         );
-        res.redirect("/");
+        res.redirect("/"); // Redirect to home page
     } catch (err) {
-        console.log(err);
+        console.log(err); // Log errors
+    }
+});
+
+
+// Route to update a book's details (UPDATE functionality)
+app.post("/edit/:id", async (req, res) => {
+    const { title, author, rating, recency, notes } = req.body; // Extract book details from the request body
+    const id = req.params.id; // Extract the book ID from the URL parameters
+
+    try {
+        await db.query(
+            "UPDATE books SET title = $1, author = $2, rating = $3, recency = $4, notes = $5 WHERE id = $6", // Update the book in the database
+            [title, author, rating, recency || null, notes || null, id]
+        );
+        res.redirect("/"); // Redirect to the home page after successful update
+    } catch (err) {
+        console.log(err); // Log any errors
+        res.status(500).send("Server error"); // Send a server error response in case of failure
     }
 });
 
@@ -79,25 +102,16 @@ app.post("/delete", async (req, res) => {
     const id = req.body.deleteBookId; // Get the ID of the book to be deleted
     try {
         await db.query("DELETE FROM books WHERE id = $1", [id]); // Delete the book from the database
-        res.redirect("/");
+        res.redirect("/"); // Redirect to the home page after successful deletion
     } catch (err) {
-        console.log(err);
+        console.log(err); // Log any errors
     }
 });
 
-
 // Route to fetch book covers from an external API (Open Library Covers API)
 app.get("/bookcover/:key/:value/:size", async (req, res) => {
-    const { key, value, size } = req.params;
-  
-    // Validate size
-    if (!['S', 'M', 'L'].includes(size.toUpperCase())) {
-        return res.status(400).json({ error: "Invalid size parameter" });
-    }
-  
-    // Construct the URL for the book cover
-    const coverUrl = `https://covers.openlibrary.org/b/${key}/${value}-${size}.jpg`;
-  
+    var coverUrl = req.body.coverUrl;
+
     try {
         const response = await axios.get(coverUrl, { responseType: 'arraybuffer' });
   
@@ -106,10 +120,10 @@ app.get("/bookcover/:key/:value/:size", async (req, res) => {
             res.set('Content-Type', 'image/jpeg');
             res.send(response.data);
         } else {
-        res.status(404).json({ error: "Cover not found" });
+            res.status(404).json({ error: "Cover not found" });
         }
     } catch (err) {
-        console.log(err);
+        console.log(err); // Log any errors
         res.status(404).json({ error: "Cover not found" });
     }
 });
