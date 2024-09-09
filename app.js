@@ -2,7 +2,7 @@
 import express from "express"; // express framework for building web server
 import bodyParser from "body-parser"; // middleware for parsing request bodies
 import pg from "pg"; // PostgreSQL client for interacting with the database
-import axios from "axios"; // Axios for making HTTP requests (for external APIs)
+import axios from "axios"; // axios for making HTTP requests (for external APIs)
 import dotenv from "dotenv"; // dotenv for environment variables
 
 // Load environment variables from .env file
@@ -75,6 +75,29 @@ app.get("/add_book", (req, res) => {
     res.render("add_book.ejs"); // Render the add book form template
 });
 
+// Route to search for books
+app.get("/search", async (req, res) => {
+    const query = req.query.query.toLowerCase(); // Get the search query and convert to lowercase
+
+    try {
+        // Query the database to find books that match the search query (case-insensitive)
+        const result = await db.query(
+            "SELECT * FROM books WHERE LOWER(title) LIKE $1",
+            [`%${query}%`]
+        );
+
+        // Render the search results page with the matching books
+        res.render("search_results.ejs", {
+            booksList: result.rows, // Pass the matching books to the template
+            query // Pass the search query to the template
+        });
+    } catch (err) {
+        console.error("Error searching books:", err.message);
+        res.status(500).send("Server error");
+    }
+});
+
+
 // Route to add a new book (CREATE functionality)
 app.post("/add", async (req, res) => {
     const { title, author, rating, recency, notes, isbn } = req.body; // Extract data from form submission
@@ -120,7 +143,7 @@ app.post("/delete", async (req, res) => {
 
 
 
-// For fetching cover images
+// For fetching cover images through Open Library Covers API
 app.get("/covers", async (req, res) => {
     try {
         // Query the database to get all the ISBNs from the 'books' table
@@ -136,7 +159,7 @@ app.get("/covers", async (req, res) => {
                 }))
                 .catch(() => ({
                     isbn,
-                    image: '' // Handle errors gracefully if no image is found
+                    image: '' // Handle errors if no image is found
                 }))
         );
 
@@ -152,7 +175,7 @@ app.get("/covers", async (req, res) => {
 });
 
 
-
+// Start the Server
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });

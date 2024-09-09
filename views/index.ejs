@@ -6,27 +6,28 @@
         <% booksList.forEach(book => { %>
         <li>
             <div class="p-5 mb-4 bg-body-tertiary rounded-3">
-                <div class="container-fluid py-2  d-flex justify-content-between align-items-start">
-                    <div class="book-details" >
-                    <h1 class="display-5 fw-bold fs-2"><%= book.title %></h1>
-                    <p>Author: <%= book.author %></p>
-                    <p>Rating: <%= book.rating %></p>
-                    <p>Read on: <%= book.recency ? new Date(book.recency).toLocaleDateString() : 'No date available' %></p>
-                    <div class="notes-display">
-                        <p class="col-md-8"><%= book.notes || 'No notes available' %></p>
+                <div class="d-flex justify-content-between align-items-start">
+                    <div class="book-details me-4 flex-grow-1">
+                        <h1 class="display-5 fw-bold fs-2"><%= book.title %></h1>
+                        <p>Author: <%= book.author %></p>
+                        <p>Rating: <%= book.rating %></p>
+                        <p>Read on: <%= book.recency ? new Date(book.recency).toLocaleDateString() : 'No date available' %></p>
+                        <div class="notes-display">
+                            <p class="col-md-8"><%= book.notes || 'No notes available' %></p>
+                        </div>
+
+                        <a href="/edit/<%= book.id %>#locateFormEdit" class="btn btn-light btn-sm">Edit</a>
+                        <form action="/delete" method="post" style="display:inline;">
+                            <input type="hidden" name="deleteBookId" value="<%= book.id %>">
+                            <button class="btn btn-warning btn-sm" type="submit">Delete</button>
+                        </form>
                     </div>
-                    
-                    <a href="/edit/<%= book.id %>" class="btn btn-light btn-sm">Edit</a>
-                    <form action="/delete" method="post" style="display:inline;">
-                        <input type="hidden" name="deleteBookId" value="<%= book.id %>">
-                        <button class="btn btn-warning btn-sm" type="submit">Delete</button>
-                    </form>                    
+
+                    <div class="book-cover"  id="cover-<%= book.isbn %>">
+                        <!-- Cover image will be placed here -->
+                    </div>
                 </div>
-                
-                <!-- Placeholder for book cover -->
-                <div class="book-cover" id="cover-<%= book.isbn %>">
-                    <!-- Cover image will be inserted here -->
-                </div>
+            </div>
         </li>
         <% }) %>
     </ul>
@@ -36,22 +37,23 @@
 <script>
     // Fetch the cover images from the server
     fetch('/covers')
-        .then(response => response.json())
-        .then(covers => {
-            covers.forEach(cover => {
-                const coverDiv = document.getElementById('cover-' + cover.isbn); // Select the correct cover div by ISBN
-                if (coverDiv && cover.image) {
-                    const img = document.createElement('img');
-                    img.src = cover.image;
-                    img.alt = `Cover for ISBN ${cover.isbn}`;
-                    img.style.width = '150px';
-                    img.style.margin = '15px';
-                    coverDiv.appendChild(img); // Append the image to the corresponding book cover div
+        .then(response => response.json()) // When the server responds, convert the data into JSON format
+        .then(covers => { // Once the data is ready, execute this function with the cover images
+            covers.forEach(cover => { // Loop through each cover in the covers array
+                const coverDiv = document.getElementById('cover-' + cover.isbn); // Find the div by combining "cover-" with the book's ISBN number
+                if (coverDiv && cover.image) { // If the cover div exists and the cover has an image
+                    const img = document.createElement('img'); // Create a new image element
+                    img.src = cover.image; // Set the image source (URL) to the cover's image
+                    img.alt = `Cover for ISBN ${cover.isbn}`; // Set the alternate text for the image (shown if the image can't load)
+                    img.style.width = '150px'; // Set the width of the image to 150 pixels
+                    img.style.margin = '15px'; // Add 15px of margin around the image
+                    coverDiv.appendChild(img); // * Add (append) the image inside the cover div
                 }
             });
         })
-        .catch(error => {
-            console.error('Error loading covers:', error);
+        .catch(error => { // Error Handling: If something goes wrong while loading the covers
+            console.error('Error loading covers:', error); // Print the error in the browser console
         });
 </script>
+
 <%- include('partials/footer') %>

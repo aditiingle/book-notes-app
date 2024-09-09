@@ -1,42 +1,46 @@
 <%- include('partials/header', { title: 'Edit Book', headerTitle: 'Edit Book' }) %>
 
-<form action="/edit/<%= book.id %>" method="post">
-    <input type="hidden" name="id" value="<%= book.id %>">
-    
-    <div class="mb-3">
-        <label for="title" class="form-label">Title:</label>
-        <input type="text" name="title" value="<%= book.title %>" class="form-control" required>
-    </div>
-    
-    <div class="mb-3">
-        <label for="author" class="form-label">Author:</label>
-        <input type="text" name="author" value="<%= book.author %>" class="form-control" required>
-    </div>
-    
-    <div class="mb-3">
-        <label for="rating" class="form-label">Rating:</label>
-        <input type="number" name="rating" value="<%= book.rating %>" min="1" max="5" class="form-control" required>
-    </div>
-    
-    <div class="mb-3">
-        <label for="recency" class="form-label">Date Read</label>
-        <input type="date" id="recency" name="recency" class="form-control" 
-               value="<%= book.recency ? new Date(book.recency).toISOString().split('T')[0] : '' %>">
-    </div>
-    
-    <div class="mb-3">
-        <label for="notes" class="form-label">Notes:</label>
-        <textarea name="notes" class="form-control"><%= book.notes %></textarea>
-    </div>
+<div class="vh-100 d-flex align-items-center justify-content-start mx-5">
+    <div class="container form-container  w-50 mx-5">
+        <form action="/edit/<%= book.id %>" method="post">
+            <legend id="locateFormEdit">Edit Book</legend>
+            <input type="hidden" name="id" value="<%= book.id %>">
+            
+            <div class="mb-3">
+                <label for="title" class="form-label">Title:</label>
+                <input type="text" name="title" value="<%= book.title %>" class="form-control" required>
+            </div>
+            
+            <div class="mb-3">
+                <label for="author" class="form-label">Author:</label>
+                <input type="text" name="author" value="<%= book.author %>" class="form-control" required>
+            </div>
+            
+            <div class="mb-3">
+                <label for="rating" class="form-label">Rating:</label>
+                <input type="number" name="rating" value="<%= book.rating %>" min="1" max="5" class="form-control" required>
+            </div>
+            
+            <div class="mb-3">
+                <label for="recency" class="form-label">Date Read</label>
+                <input type="date" id="recency" name="recency" class="form-control" 
+                    value="<%= book.recency ? new Date(book.recency).toISOString().split('T')[0] : '' %>">
+            </div>
+            
+            <div class="mb-3">
+                <label for="notes" class="form-label">Notes:</label>
+                <textarea name="notes" class="form-control"><%= book.notes %></textarea>
+            </div>
 
-    <div class="mb-3">
-        <label for="isbn" class="form-label">ISBN:</label>
-        <input type="text" name="isbn" class="form-control" value="<%= book.isbn %>">
-    </div>
-    
-    <button type="submit" class="btn btn-primary">Save Changes</button>
-</form>
-
-<a href="/" class="btn btn-secondary mt-3">Back to Home</a>
+            <div class="mb-3">
+                <label for="isbn" class="form-label">ISBN:</label>
+                <input type="text" name="isbn" class="form-control" value="<%= book.isbn %>">
+            </div>
+            
+            <button type="submit" class="btn btn-success">Save Changes</button>
+            <a href="/" class="btn btn-secondary">Back to Book List</a>
+        </form>
+        </div>
+</div>
 
 <%- include('partials/footer') %>

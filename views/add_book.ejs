@@ -1,11 +1,11 @@
 <%- include('partials/header', { title: 'Books List', headerTitle: 'Books List' }) %>
 
-<div class="container my-4" id="addBookHere">
+<div class="vh-100 d-flex align-items-center justify-content-start mx-5" id="addBookHere">
 
-    <div class="container form-container mt-5" id="addBook">
+    <div class="container form-container  w-50 m-5" id="addBook">
         <form action="/add" method="post">
             <fieldset>
-                <legend>Add New Book</legend>
+                <legend id="locateFormAdd">Add New Book</legend>
                 
                 <div class="mb-3 form-group">
                     <label for="title" class="form-label">Title</label>
@@ -38,11 +38,9 @@
                 </div>
         
                 <button type="submit" class="btn btn-success">Add Book</button>
+                <a href="/" class="btn btn-secondary">Back to Book List</a>
             </fieldset>
         </form>
-        </div>
-        <div class="container mt-4">
-        <a href="/" class="btn btn-secondary">Back to Book List</a>
         </div>
 </div>
 
