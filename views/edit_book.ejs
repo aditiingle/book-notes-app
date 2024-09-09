@@ -19,13 +19,19 @@
     </div>
     
     <div class="mb-3">
-        <label for="recency" class="form-label">Date Read:</label>
-        <input type="date" name="recency" value="<%= book.recency %>" class="form-control">
+        <label for="recency" class="form-label">Date Read</label>
+        <input type="date" id="recency" name="recency" class="form-control" 
+               value="<%= book.recency ? new Date(book.recency).toISOString().split('T')[0] : '' %>">
     </div>
     
     <div class="mb-3">
         <label for="notes" class="form-label">Notes:</label>
         <textarea name="notes" class="form-control"><%= book.notes %></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label for="isbn" class="form-label">ISBN:</label>
+        <input type="text" name="isbn" class="form-control" value="<%= book.isbn %>">
     </div>
     
     <button type="submit" class="btn btn-primary">Save Changes</button>

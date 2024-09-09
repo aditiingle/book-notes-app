@@ -1,3 +1,5 @@
+
+
 body .custom-margin {
     margin: 20px;
 }
@@ -20,3 +22,31 @@ body .custom-margin {
 .notes-display p {
     text-align: justify;
 }
+
+.book-details {
+    flex: 1; 
+}
+
+.book-cover {
+    flex-shrink: 0; 
+    margin-left: 20px; 
+}
+
+.container-fluid {
+    display: flex;
+    align-items: flex-start; 
+    justify-content: space-between; 
+}
+
+.form-container {
+    border: 1px solid #ddd; 
+    border-radius: 10px; 
+    padding: 20px; 
+    background-color: #f9f9f9; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#bookListTitle {
+    
+}
+

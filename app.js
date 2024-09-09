@@ -65,13 +65,23 @@ app.get("/edit/:id", async (req, res) => {
     }
 });
 
+// Route to display about page (READ functionality)
+app.get("/about", (req, res) => {
+    res.render("about.ejs"); // Render the about page template
+});
+
+// Route to display the add book form (READ functionality)
+app.get("/add_book", (req, res) => {
+    res.render("add_book.ejs"); // Render the add book form template
+});
+
 // Route to add a new book (CREATE functionality)
 app.post("/add", async (req, res) => {
-    const { title, author, rating, recency, notes } = req.body; // Extract data from form submission
+    const { title, author, rating, recency, notes, isbn } = req.body; // Extract data from form submission
     try {
         await db.query(
-            "INSERT INTO books (title, author, rating, recency, notes) VALUES ($1, $2, $3, $4, $5)", // Ensure notes are included in the query
-            [title, author, rating, recency || null, notes || null] // Include notes in the parameters
+            "INSERT INTO books (title, author, rating, recency, notes, isbn) VALUES ($1, $2, $3, $4, $5, $6)", // Ensure notes are included in the query
+            [title, author, rating, recency || null, notes || null, isbn || null] // Include notes in the parameters
         );
         res.redirect("/"); // Redirect to home page
     } catch (err) {
@@ -82,13 +92,13 @@ app.post("/add", async (req, res) => {
 
 // Route to update a book's details (UPDATE functionality)
 app.post("/edit/:id", async (req, res) => {
-    const { title, author, rating, recency, notes } = req.body; // Extract book details from the request body
+    const { title, author, rating, recency, notes, isbn } = req.body; // Extract book details from the request body
     const id = req.params.id; // Extract the book ID from the URL parameters
 
     try {
         await db.query(
-            "UPDATE books SET title = $1, author = $2, rating = $3, recency = $4, notes = $5 WHERE id = $6", // Update the book in the database
-            [title, author, rating, recency || null, notes || null, id]
+            "UPDATE books SET title = $1, author = $2, rating = $3, recency = $4, notes = $5, isbn = $6 WHERE id = $7", // Update the book in the database
+            [title, author, rating, recency || null, notes || null, isbn || null, id]
         );
         res.redirect("/"); // Redirect to the home page after successful update
     } catch (err) {
@@ -109,30 +119,37 @@ app.post("/delete", async (req, res) => {
 });
 
 
-// Route to fetch cover images
-app.get("/covers", async (req, res) => {
-    const isbns = ["2226177612", "9780143130727","0451526538", "9781612680019", "9781410484406", "607011521X", "0002311178"];
-    const coverPromises = isbns.map(isbn =>
-        axios.get(`https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`, { responseType: 'arraybuffer' })
-            .then(response => ({
-                isbn,
-                image: `data:image/jpeg;base64,${Buffer.from(response.data).toString('base64')}`
-            }))
-            .catch(() => ({
-                isbn,
-                image: '' // Handle errors gracefully
-            }))
-    );
 
+// For fetching cover images
+app.get("/covers", async (req, res) => {
     try {
+        // Query the database to get all the ISBNs from the 'books' table
+        const result = await db.query('SELECT isbn FROM books');
+        const isbns = result.rows.map(book => book.isbn); // Extract ISBNs from the result
+
+        // Generate a list of promises to fetch the cover images for each ISBN
+        const coverPromises = isbns.map(isbn =>
+            axios.get(`https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`, { responseType: 'arraybuffer' })
+                .then(response => ({
+                    isbn,
+                    image: `data:image/jpeg;base64,${Buffer.from(response.data).toString('base64')}`
+                }))
+                .catch(() => ({
+                    isbn,
+                    image: '' // Handle errors gracefully if no image is found
+                }))
+        );
+
+        // Wait for all cover images to be fetched
         const covers = await Promise.all(coverPromises);
-        res.json(covers); // Return covers as JSON
+        
+        // Send the fetched cover images as JSON
+        res.json(covers);
     } catch (err) {
         console.error('Error fetching cover images:', err.message);
         res.status(500).send('Server error');
     }
 });
-
 
 
 
