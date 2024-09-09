@@ -1,0 +1,22 @@
+body .custom-margin {
+    margin: 20px;
+}
+
+.images-axios {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.images-axios img {
+        width: 50px;
+        margin: 15px;
+}
+
+.notes-display {
+    width: 50vw;
+}
+
+.notes-display p {
+    text-align: justify;
+}

@@ -111,7 +111,7 @@ app.post("/delete", async (req, res) => {
 
 // Route to fetch cover images
 app.get("/covers", async (req, res) => {
-    const isbns = ["2226177612", "0451526538", "9781406356885", "607011521X"];
+    const isbns = ["2226177612", "9780143130727","0451526538", "9781612680019", "9781410484406", "607011521X", "0002311178"];
     const coverPromises = isbns.map(isbn =>
         axios.get(`https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`, { responseType: 'arraybuffer' })
             .then(response => ({

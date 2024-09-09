@@ -1,29 +1,31 @@
 <%- include('partials/header', { title: 'Books List', headerTitle: 'Books List' }) %>
 
-<script>
-    fetch('/covers') // Fetch the cover images from the server
-        .then(response => response.json()) // Parse the response from the server as JSON
-        .then(covers => { // Process the JSON data (covers) received from the server
-            const coversDiv = document.getElementById('covers'); // Get the div element with the ID 'covers' where images will be displayed
-            covers.forEach(cover => { // Iterate through each cover object in the covers array
-                if (cover.image) {
-                    const img = document.createElement('img'); // Check if the cover object contains an image
-                    img.src = cover.image; // Set the source of the image to the base64-encoded cover image data
-                    img.alt = `Cover for ISBN ${cover.isbn}`; // Set alternative text for the image
-                    img.style.width = '150px'; // Set the width of the image to 150 pixels
-                    img.style.margin = '10px'; // Add a margin of 10 pixels around the image
-                    coversDiv.appendChild(img); // Append the image element to the coversDiv
-                }
+<div class="container images-axios" id="covers">
+    <script>
+        fetch('/covers') // Fetch the cover images from the server
+            .then(response => response.json()) // Parse the response from the server as JSON
+            .then(covers => { // Process the JSON data (covers) received from the server
+                const coversDiv = document.getElementById('covers'); // Get the div element with the ID 'covers' where images will be displayed
+                covers.forEach(cover => { // Iterate through each cover object in the covers array
+                    if (cover.image) {
+                        const img = document.createElement('img'); // Check if the cover object contains an image
+                        img.src = cover.image; // Set the source of the image to the base64-encoded cover image data
+                        img.alt = `Cover for ISBN ${cover.isbn}`; // Set alternative text for the image
+                        img.style.width = '150px'; // Set the width of the image to 150 pixels
+                        img.style.margin = '15px'; // Add a margin of 15 pixels around the image
+                        coversDiv.appendChild(img); // Append the image element to the coversDiv
+                    }
+                });
+            })
+            .catch(error => { // Handle any errors that occur during the fetch or image processing
+                console.error('Error loading covers:', error); // Log the error message to the console
             });
-        })
-        .catch(error => { // Handle any errors that occur during the fetch or image processing
-            console.error('Error loading covers:', error); // Log the error message to the console
-        });
-</script>
+    </script>
+</div>
 
 <div id="covers"></div>
 
-
+<div class="container">
 <form action="/add" method="post">
     <fieldset>
         <legend>Add New Book</legend>
@@ -56,22 +58,29 @@
         <button type="submit" class="btn btn-primary">Add Book</button>
     </fieldset>
 </form>
+</div>
 
-<h2>Books List</h2>
-<ul style="list-style-type: none;">
+
+<div class="container">
+<ul class="list-unstyled">
     <% booksList.forEach(book => { %>
         <li>
-            <strong><%= book.title %></strong> by <%= book.author %>
-            - Rating: <%= book.rating %>
-            - Read on: <%= book.recency ? new Date(book.recency).toLocaleDateString() : 'No date available' %>
-            <p><strong>Notes:</strong> <%= book.notes || 'No notes available' %></p>
-            <a href="/edit/<%= book.id %>">Edit</a>
-            <form action="/delete" method="post" style="display:inline;">
-                <input type="hidden" name="deleteBookId" value="<%= book.id %>">
-                <button type="submit" class="btn btn">Delete</button>
-            </form>
+            <div class="p-5 mb-4 bg-body-tertiary rounded-3">
+                <div class="container-fluid py-2">
+                <h1 class="display-5 fw-bold fs-2"><%= book.title %></h1>
+                <p>Author: <%= book.author %></p>
+                <p>Rating: <%= book.rating %></p>
+                <p>Read on: <%= book.recency ? new Date(book.recency).toLocaleDateString() : 'No date available' %></p>
+                <div class="notes-display"><p class="col-md-8"><%= book.notes || 'No notes available' %></p></div>
+                <a href="/edit/<%= book.id %>" class="btn btn-light btn-sm">Edit</a>
+                <form action="/delete" method="post" style="display:inline;">
+                    <input type="hidden" name="deleteBookId" value="<%= book.id %>">
+                    <button class="btn btn-warning btn-sm" type="button">Delete</button>
+                </form>
+                </div>
+            </div>
         </li>
-    <% }) %>
-</ul>
-
+        <% }) %>
+    </ul>
+</div>
 <%- include('partials/footer') %>
