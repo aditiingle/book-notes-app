@@ -1,5 +1,29 @@
 <%- include('partials/header', { title: 'Books List', headerTitle: 'Books List' }) %>
 
+<script>
+    fetch('/covers') // Fetch the cover images from the server
+        .then(response => response.json()) // Parse the response from the server as JSON
+        .then(covers => { // Process the JSON data (covers) received from the server
+            const coversDiv = document.getElementById('covers'); // Get the div element with the ID 'covers' where images will be displayed
+            covers.forEach(cover => { // Iterate through each cover object in the covers array
+                if (cover.image) {
+                    const img = document.createElement('img'); // Check if the cover object contains an image
+                    img.src = cover.image; // Set the source of the image to the base64-encoded cover image data
+                    img.alt = `Cover for ISBN ${cover.isbn}`; // Set alternative text for the image
+                    img.style.width = '150px'; // Set the width of the image to 150 pixels
+                    img.style.margin = '10px'; // Add a margin of 10 pixels around the image
+                    coversDiv.appendChild(img); // Append the image element to the coversDiv
+                }
+            });
+        })
+        .catch(error => { // Handle any errors that occur during the fetch or image processing
+            console.error('Error loading covers:', error); // Log the error message to the console
+        });
+</script>
+
+<div id="covers"></div>
+
+
 <form action="/add" method="post">
     <fieldset>
         <legend>Add New Book</legend>

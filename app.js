@@ -108,25 +108,32 @@ app.post("/delete", async (req, res) => {
     }
 });
 
-// Route to fetch book covers from an external API (Open Library Covers API)
-app.get("/bookcover/:key/:value/:size", async (req, res) => {
-    var coverUrl = req.body.coverUrl;
+
+// Route to fetch cover images
+app.get("/covers", async (req, res) => {
+    const isbns = ["2226177612", "0451526538", "9781406356885", "607011521X"];
+    const coverPromises = isbns.map(isbn =>
+        axios.get(`https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`, { responseType: 'arraybuffer' })
+            .then(response => ({
+                isbn,
+                image: `data:image/jpeg;base64,${Buffer.from(response.data).toString('base64')}`
+            }))
+            .catch(() => ({
+                isbn,
+                image: '' // Handle errors gracefully
+            }))
+    );
 
     try {
-        const response = await axios.get(coverUrl, { responseType: 'arraybuffer' });
-  
-        // If the response is a valid image, send it back
-        if (response.status === 200) {
-            res.set('Content-Type', 'image/jpeg');
-            res.send(response.data);
-        } else {
-            res.status(404).json({ error: "Cover not found" });
-        }
+        const covers = await Promise.all(coverPromises);
+        res.json(covers); // Return covers as JSON
     } catch (err) {
-        console.log(err); // Log any errors
-        res.status(404).json({ error: "Cover not found" });
+        console.error('Error fetching cover images:', err.message);
+        res.status(500).send('Server error');
     }
 });
+
+
 
 
 app.listen(port, () => {
