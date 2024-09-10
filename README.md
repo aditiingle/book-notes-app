@@ -3,9 +3,26 @@ A book notes app that lets users track books they've read, take notes, rate, and
 
 ## A Preview of the Web Application
 
-View all your books on the home page : 
+View all your books on the home page and delete or edit them : 
 
 ![Preview of my website](https://github.com/aditiingle/book-notes-app/blob/developer/home.png)
+
+Add a new book to the collection : 
+
+![Preview of my website](https://github.com/aditiingle/book-notes-app/blob/developer/add.png)
+
+Search for a specific book by title : 
+
+![Preview of my website](https://github.com/aditiingle/book-notes-app/blob/developer/search.png)
+
+View all your books in the book list : 
+
+![Preview of my website](https://github.com/aditiingle/book-notes-app/blob/developer/booklist.png)
+
+Get to know more about the web application : 
+
+![Preview of my website](https://github.com/aditiingle/book-notes-app/blob/developer/about.png)
+
 
 ## How to run my Express.js web application locally on your computer 
 
