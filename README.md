@@ -1,6 +1,11 @@
 # Book Notes Web Application
 A book notes app that lets users track books they've read, take notes, rate, and sort by recency, title, or rating. Integrates the Open Library API to fetch book covers. Built using Node.js, Express.js, PostgreSQL for data persistence, and EJS for templating, this app demonstrates full CRUD functionality and API integration.
 
+## A Preview of the Web Application
+
+View all your books on the home page : 
+![Preview of my website](https://github.com/aditiingle/book-notes-app/blob/developer/home.png)
+
 ## How to run my Express.js web application locally on your computer 
 
 This is a simple Express.js application for managing a collection of books. It uses PostgreSQL as the database and EJS for templating.
