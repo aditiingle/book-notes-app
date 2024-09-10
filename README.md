@@ -1,5 +1,5 @@
 # Book Notes Web Application
-A book notes app that lets users track books they've read, take notes, rate, and sort by recency, title, or rating. Integrates the Open Library API to fetch book covers. Built using Node.js, Express.js, PostgreSQL for data persistence, and EJS for templating, this app demonstrates full CRUD functionality and API integration.
+A book notes app that lets users track books they've read, take notes, rate, and sort by recency, title, or rating. Integrates the Open Library API to fetch book covers. Built using Node.js, Express.js, PostgreSQL for data persistence, and EJS for templating, this app demonstrates full CRUD functionality and API integration. I used console.log to check key variables and responses during database queries, which helped me identify and fix issues in the data flow. This ensured that the correct data was retrieved and processed as expected.
 
 ## A Preview of the Web Application
 
