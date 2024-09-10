@@ -4,6 +4,7 @@ A book notes app that lets users track books they've read, take notes, rate, and
 ## A Preview of the Web Application
 
 View all your books on the home page : 
+
 ![Preview of my website](https://github.com/aditiingle/book-notes-app/blob/developer/home.png)
 
 ## How to run my Express.js web application locally on your computer 
