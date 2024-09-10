@@ -67,7 +67,7 @@ CREATE TABLE books (
 ```bash
   nodemon app.js
 ```
-Open your web browser and navigate to localhost:3000 to see the website in action
+Open your web browser and navigate to localhost:3000. This will open the Book Notes App, where you can view and manage your own book collection.
 
 
 
