@@ -19,7 +19,7 @@ View all your books in the book list :
 
 ![Preview of my website](https://github.com/aditiingle/book-notes-app/blob/developer/booklist.png)
 
-Get to know more about the web application : 
+Get to know more about the web application and API : 
 
 ![Preview of my website](https://github.com/aditiingle/book-notes-app/blob/developer/about.png)
 
