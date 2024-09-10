@@ -16,31 +16,36 @@ This is a simple Express.js application for managing a collection of books. It u
 First, clone the repository to your local machine:
 
 ```bash
-git clone https://github.com/yourusername/book-notes-app.git
+    git clone https://github.com/yourusername/book-notes-app.git
 ```
 
 Navigate to the project directory:
 ```bash
-cd book-notes-app
+    cd book-notes-app
 ```
 
-### Step 2: Install Dependencies
+### Step 2: Initialize npm (if not already done)
 ```bash
-npm install express ejs axios pg dotenv body-parser method-override
-npm install --save-dev nodemon
+    npm init -y
 ```
 
-### Step 3: Set up environment variables
+### Step 3: Install Dependencies
+```bash
+    npm install express ejs axios pg dotenv body-parser method-override
+    npm install --save-dev nodemon
+```
+
+### Step 4: Set up environment variables
 
 Create a .env file in the project root:
 ```bash
-touch .env
+    touch .env
 ```
 
 Edit the .env file to include your environment-specific settings (Make sure to use the same variable name):
 DB_PASSWORD=your_postgres_password
 
-### Step 4: In pgAdmin (PostgreSQL)
+### Step 5: In pgAdmin (PostgreSQL)
 
 Create a new database called book_list, then create a table with : 
 
@@ -63,7 +68,7 @@ CREATE TABLE books (
 * Remove the id column from the CSV file as it will be auto-generated.
 * Import the CSV file into the table.
 
-### Step 5: Start the server and Access the Website
+### Step 6: Start the server and Access the Website
 ```bash
   nodemon app.js
 ```
