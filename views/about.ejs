@@ -1,0 +1,33 @@
+<%- include('partials/header', { title: 'Books List', headerTitle: 'Books List' }) %>
+
+<div class="container" id="aboutWebApp">
+    <div class="container py-4">
+    
+        <div class="p-5 mb-4 bg-body-tertiary rounded-3">
+          <div class="container-fluid py-5 book-details">
+            <h1 class="display-5 fw-bold">About the Book Notes Web Application</h1>
+            <p class="col-md-8 fs-4">Book Notes is a user-friendly web application that allows you to catalog and manage the books you've read. It's a space to record important details about each book, including titles, authors, ratings, and personal notes.</p>
+            <a href="https://github.com/aditiingle?tab=repositories" class="btn btn-info btn-sm">Other Projects</a>
+          </div>
+        </div>
+    
+        <div class="row align-items-md-stretch">
+          <div class="col-md-6">
+            <div class="h-100 p-5 text-bg-dark rounded-3">
+              <h2>API Integration</h2>
+              <p>Open Library Covers API: https://openlibrary.org/dev/docs/api/covers.</p>
+              <a href="https://openlibrary.org/dev/docs/api/covers" class="btn btn-light btn-sm">Open Library Covers API</a>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="h-100 p-5 bg-body-tertiary border rounded-3">
+              <h2>Technologies and Functionalites</h2>
+              <p>This web application is built using Express.js for the server framework, PostgreSQL for database management, and EJS for rendering dynamic web pages. The app facilitates the management of a book collection, allowing users to add, edit, and delete book entries. Body-parser middleware handles form data, while Express.static serves static assets like CSS and JavaScript. The application includes a search feature for quick book look-ups. With API Integration, Axios is used to fetch book cover images from the Open Library API based on ISBNs. The dotenv package keeps environment variables secure.</p>
+            </div>
+          </div>
+        </div>
+    
+      </div>
+</div>
+
+<%- include('partials/footer') %>
